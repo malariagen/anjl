@@ -491,9 +491,9 @@ def dynamic_search_parallel(
                 if q_iz < q_i:
                     Q[i] = q_iz
 
-            if q_i > global_q_xy:
+            if q_i > local_q_xy:
                 # We can skip this row. The previous row optimum join criterion is greater
-                # than the current global optimum, and so there is now way that this row
+                # than the current local optimum, and so there is now way that this row
                 # can contain a better match. This is the core optimisation of the dynamic
                 # algorithm.
                 continue
@@ -516,10 +516,6 @@ def dynamic_search_parallel(
                 local_d_xy = d_ij
                 local_x = i
                 local_y = j
-
-                # Share update between threads, in case it helps other threads skip
-                # more rows. This is a supported parallel reduction.
-                global_q_xy = min(global_q_xy, local_q_xy)
 
         # Store results for this thread.
         results_q_xy[t] = local_q_xy
